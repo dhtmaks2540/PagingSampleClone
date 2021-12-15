@@ -1,83 +1,40 @@
-/*
- * Copyright (C) 2017 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package kr.co.lee.cloneapp
 
-package paging.android.example.com.pagingsample
-
-import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.room.*
 import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-/**
- * Singleton database object. Note that for a real app, you should probably use a Dependency
- * Injection framework or Service Locator to create the singleton database.
- */
+@Database(entities = [SimpleItem::class], version = 1)
+abstract class SimpleDatabase: RoomDatabase() {
+    abstract fun simpleDao(): SimpleDao
 
-/**
- * 데이터 베이스 객체는 싱글턴으로 존재. 실제 앱에서는 Dependency Injection(DI) 프레임워크를 사용하던가
- * Service Locator를 사용하여 싱글턴 데이터베이스를 사용해야한다.
- */
-
-
-// DAO를 반환하는 클래스
-// Entity와 버전을 지정
-@Database(entities = [Cheese::class], version = 1)
-abstract class CheeseDb : RoomDatabase() {
-    // Dao를 반환하는 메소드
-    abstract fun cheeseDao(): CheeseDao
-
-    // companion object를 사용하여 static으로 생성
+    // 동반 객체를 사용하여 static으로 설정
+    // 예제코드에서는 RoomDatabase 객체를 전역으로 만들었지만
+    // 실제 코드에서는 DI(Dependency Injection)을 사용하기를 권고
     companion object {
-        private var instance: CheeseDb? = null
+        private var instance: SimpleDatabase? = null
 
         @Synchronized
-        // 이 메서드는 멀티 스레드에 의한 동시성으로 실행되는 것으로부터 인스턴스의 감시로 인해 보호받습니다.
-        fun get(context: Context): CheeseDb {
-            if (instance == null) {
+        fun get(context: Context): SimpleDatabase {
+            if(instance == null) {
                 // Database 객체 생성
                 instance = Room.databaseBuilder(
                     context.applicationContext,
-                    CheeseDb::class.java, "CheeseDatabase"
+                    SimpleDatabase::class.java, "SimpleItemDatabase"
                 )
-                    // 이 데이터베이스에 RoomDatabase.Callback을 추가
-                    .addCallback(object : RoomDatabase.Callback() { // RoomDatabase를 위한 콜백
-                        // 데이터베이스가 처음으로 만들어졌을 때 호출되는데, 모든 테이블이 만들어진 후 호출됩니다.
+                    .addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
-                            fillInDb(context.applicationContext)
+
                         }
                     }).build()
-            }
 
-            return instance!!
-        }
-
-        /**
-         * 치즈 리스트로 데이터베이스를 채웁니다
-         */
-        private fun fillInDb(context: Context) {
-            // inserts in Room are executed on the current thread, so we insert in the background
-            // 현재의 스레드에서 룸으로 inserts를 실행합니다. 따라서 백그라운드에서 insert를 진행
-            ioThread {
-                get(context).cheeseDao().insert(
-                    // autoIncrement의 속성으로 0값을 주면 자동으로 증가하는 시스템
-                    // map 함수를 사용해 컬렉션 객체에 람다식 적용
-                    // 새로운 리스트가 만들어져서 insert을 통해 데이터베이스 삽입
-                    CHEESE_DATA.map { Cheese(id = 0, name = it) })
+                return instance!!
             }
         }
     }
+
 }
 
 // String List

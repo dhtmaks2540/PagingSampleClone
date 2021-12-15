@@ -21,7 +21,7 @@ buildscript {
     addRepos(repositories)
     dependencies {
         classpath deps.android_gradle_plugin
-        classpath deps.kotlin.plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
     }
 }
 
