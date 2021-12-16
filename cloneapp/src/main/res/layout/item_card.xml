@@ -8,7 +8,7 @@
         app:cardUseCompatPadding="true">
 
         <TextView
-            android:id="@+id/text_view"
+            android:id="@+id/name_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp" />

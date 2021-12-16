@@ -1,13 +1,14 @@
 package kr.co.lee.cloneapp
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(entities = [SimpleItem::class], version = 1)
-abstract class SimpleDatabase: RoomDatabase() {
+abstract class SimpleDatabase : RoomDatabase() {
     abstract fun simpleDao(): SimpleDao
 
     // 동반 객체를 사용하여 static으로 설정
@@ -18,7 +19,7 @@ abstract class SimpleDatabase: RoomDatabase() {
 
         @Synchronized
         fun get(context: Context): SimpleDatabase {
-            if(instance == null) {
+            if (instance == null) {
                 // Database 객체 생성
                 instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -26,16 +27,30 @@ abstract class SimpleDatabase: RoomDatabase() {
                 )
                     .addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
-
+                            fillInDb(context.applicationContext)
+                            Log.d(TAG, "SimpleDatabase onCreate")
                         }
                     }).build()
+            }
 
-                return instance!!
+            return instance!!
+        }
+
+        // 아이템으로 데이터베이스에 insert
+        private fun fillInDb(context: Context) {
+            // 새롭게 생긴 스레드를 사용해 insert 실행
+            ioThread {
+                get(context).simpleDao().insert(
+                    // 리스트를 map하여 SimpleItem 객체로 만든 후 반환
+                    CHEESE_DATA.map { SimpleItem(id = 0, name = it) }
+                )
             }
         }
     }
 
 }
+
+private val TAG: String = "SimpleDatabase"
 
 // String List
 private val CHEESE_DATA = arrayListOf(
