@@ -11,7 +11,8 @@
             android:id="@+id/name_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp" />
+            android:layout_marginTop="@dimen/card_vertical_margin"
+            android:layout_marginBottom="@dimen/card_vertical_margin" />
 
     </androidx.cardview.widget.CardView>
 </layout>

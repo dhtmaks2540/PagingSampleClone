@@ -19,7 +19,7 @@ class SimpleViewModel(private val dao: SimpleDao): ViewModel() {
     // Pager 객체 생성
     // Paging으로 들어가는 기본 진입점
     // PagingData의 반응형 스트림을 위한 생성자
-    val allCheeses: Flow<PagingData<SimpleListItem>> = Pager(
+    val allItems: Flow<PagingData<SimpleListItem>> = Pager(
         // PagingConfig 객체 생성
         // PagingSource에서 데이터를 로드할 때, Pager 내에서 로드 동작을 구성하는데 사용되는 객체
         config = PagingConfig(

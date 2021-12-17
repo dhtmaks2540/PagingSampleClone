@@ -74,7 +74,11 @@ abstract class CheeseDb : RoomDatabase() {
                     // autoIncrement의 속성으로 0값을 주면 자동으로 증가하는 시스템
                     // map 함수를 사용해 컬렉션 객체에 람다식 적용
                     // 새로운 리스트가 만들어져서 insert을 통해 데이터베이스 삽입
-                    CHEESE_DATA.map { Cheese(id = 0, name = it) })
+                    CHEESE_DATA.map {
+                        println(it)
+                        Cheese(id = 0, name = it)
+                    }
+                )
             }
         }
     }

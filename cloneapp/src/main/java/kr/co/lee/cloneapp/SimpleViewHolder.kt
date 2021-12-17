@@ -4,7 +4,7 @@ import android.graphics.Typeface
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.cloneapp.databinding.ItemCardBinding
 
-class SimpleHolder(binding: ItemCardBinding): RecyclerView.ViewHolder(binding.root) {
+class SimpleViewHolder(binding: ItemCardBinding): RecyclerView.ViewHolder(binding.root) {
     // SimpleItem 객체 생성
     var simpleItem: SimpleItem? = null
         private set
@@ -24,6 +24,7 @@ class SimpleHolder(binding: ItemCardBinding): RecyclerView.ViewHolder(binding.ro
         }
         // 형변환
         simpleItem = (item as? SimpleListItem.Item)?.simpleItem
+        println("Items: $item")
         nameView.text = item?.name
     }
 }

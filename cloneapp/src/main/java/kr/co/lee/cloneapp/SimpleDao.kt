@@ -21,6 +21,6 @@ interface SimpleDao {
     fun delete(item: SimpleItem)
 
     // Select
-    @Query("SELECT * FROM simpleItem ORDER BY name COLLATE NOCASE ASC")
+    @Query("SELECT * FROM SimpleItem ORDER BY name COLLATE NOCASE ASC")
     fun allItemsByName(): PagingSource<Int, SimpleItem>
 }

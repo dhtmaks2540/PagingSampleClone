@@ -4,19 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.cloneapp.databinding.ItemCardBinding
 
-class RecyclerAdapter: PagingDataAdapter<SimpleListItem, SimpleHolder>(diffCallback) {
+class RecyclerAdapter: PagingDataAdapter<SimpleListItem, SimpleViewHolder>(diffCallback) {
     // 아이템 항목 
-    override fun onBindViewHolder(holder: SimpleHolder, position: Int) {
-        holder.bindTo(getItem(position))
+    override fun onBindViewHolder(viewHolder: SimpleViewHolder, position: Int) {
+        viewHolder.bindTo(getItem(position))
     }
 
     // Layout 초기화
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleHolder {
-        val view = ItemCardBinding.inflate(LayoutInflater.from(parent.context))
-        return SimpleHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
+        val view = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SimpleViewHolder(view)
     }
 
     companion object {
