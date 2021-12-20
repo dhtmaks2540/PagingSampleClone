@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity() {
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                (viewHolder as SimpleViewHolder).simpleItem?.let {
-//                    viewModel.remove(it)
-//                }
+                (viewHolder as SimpleViewHolder).simpleItem?.let {
+                    viewModel.remove(it)
+                }
             }
 
         }).attachToRecyclerView(binding.recycler)

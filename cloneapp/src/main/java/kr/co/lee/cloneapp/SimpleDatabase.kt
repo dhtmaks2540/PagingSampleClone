@@ -7,8 +7,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
+// 데이터베이스 클래스
+// Dao 반환하는 역할을 수행
 @Database(entities = [SimpleItem::class], version = 1)
+// RoomDatabase를 상속
 abstract class SimpleDatabase : RoomDatabase() {
+    // Dao 객체를 반환하는 메소드
     abstract fun simpleDao(): SimpleDao
 
     // 동반 객체를 사용하여 static으로 설정
@@ -16,19 +20,24 @@ abstract class SimpleDatabase : RoomDatabase() {
     // 실제 코드에서는 DI(Dependency Injection)을 사용하기를 권고
     companion object {
         private var instance: SimpleDatabase? = null
-
+        // the method will be protected from concurrent execution by multiple threads 
+        // by the monitor of the instance (or, for static methods, the class) on which the method is defined
+        // 메소드는 다중 스레드에 의해 동시적으로 실행되는 것으로부터 보호받습니다.
+        // 메소드가 정의된 객체의 감시에 의해서
         @Synchronized
         fun get(context: Context): SimpleDatabase {
+            // Database 객체가 null이라면
             if (instance == null) {
                 // Database 객체 생성
                 instance = Room.databaseBuilder(
                     context.applicationContext,
                     SimpleDatabase::class.java, "SimpleItemDatabase"
                 )
-                    .addCallback(object : RoomDatabase.Callback() {
+                    .addCallback(object : RoomDatabase.Callback() { // Callback 추가
+                        // 데이터베이스가 만들어지면 호출되는 메소드
                         override fun onCreate(db: SupportSQLiteDatabase) {
+                            // 데이터베이스가 만들어지면 이 메소드를 호출
                             fillInDb(context.applicationContext)
-                            Log.d(TAG, "SimpleDatabase onCreate")
                         }
                     }).build()
             }
@@ -36,12 +45,12 @@ abstract class SimpleDatabase : RoomDatabase() {
             return instance!!
         }
 
-        // 아이템으로 데이터베이스에 insert
+        // 데이터베이스에 데이터를 insert하는 메소드
         private fun fillInDb(context: Context) {
             // 새롭게 생긴 스레드를 사용해 insert 실행
             ioThread {
                 get(context).simpleDao().insert(
-                    // 리스트를 map하여 SimpleItem 객체로 만든 후 반환
+                    // 리스트를 map하여 SimpleItem 객체 리스트로 변환
                     CHEESE_DATA.map { SimpleItem(id = 0, name = it) }
                 )
             }

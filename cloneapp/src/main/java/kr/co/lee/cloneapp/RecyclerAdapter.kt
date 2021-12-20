@@ -6,9 +6,14 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import kr.co.lee.cloneapp.databinding.ItemCardBinding
 
+// PagingDataAdapter를 상속받는 클래스
+// 제네릭으로 SealedClass와 RecyclerView.ViewHolder 전달
+// 생성자로 DiffUtil.ItemCallback 객체 전달
 class RecyclerAdapter: PagingDataAdapter<SimpleListItem, SimpleViewHolder>(diffCallback) {
-    // 아이템 항목 
+    // 아이템 항목 초기화
     override fun onBindViewHolder(viewHolder: SimpleViewHolder, position: Int) {
+        // ViewHolder 클래스의 항목 초기화 메소드 호출
+        // getItem: 특정한 포지션에 위치한 아이템을 반환하는 메소드
         viewHolder.bindTo(getItem(position))
     }
 

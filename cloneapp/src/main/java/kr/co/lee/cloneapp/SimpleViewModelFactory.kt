@@ -18,6 +18,7 @@ class SimpleViewModelFactory(
             // ViewModel 반환
             return SimpleViewModel(simpleDao) as T
         }
+        // 예외 처리
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
