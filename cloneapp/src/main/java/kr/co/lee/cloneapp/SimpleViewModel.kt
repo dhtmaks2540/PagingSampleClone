@@ -35,14 +35,20 @@ class SimpleViewModel(private val dao: SimpleDao): ViewModel() {
             maxSize = 200
         )
     ) {
-        // PagingSourceFactory에 해당
         // PagingSource를 반환하는 메소드
         dao.allItemsByName()
     }.flow // Flow 프로퍼티
+        // 중간 연산자에 해당
+        // 기존의 flow의 각 값을 주어진 변형 함수를 적용한 결과를 포함하는 새로운 flow를 return
+        // Colletion에 적용하는 map과 똑같다.
         .map { pagingData ->
             pagingData
                 // SimpleItem을 공통 UI 모델에 매핑
+                // PagingData에 map을 적용
                 .map { simpleItem -> SimpleListItem.Item(simpleItem) }
+                // 원래 요소를 포함하는 PagingData를 반환하며,
+                // 생성자(generator)에서 생성된 선택적 구분 기호를 사용
+                // 이 변형은 페이지가 로드될 때 비동기적으로 적용
                 .insertSeparators { before: SimpleListItem?, after: SimpleListItem? ->
                     if (before == null && after == null) {
                         // List is empty after fully loaded; return null to skip adding separator.

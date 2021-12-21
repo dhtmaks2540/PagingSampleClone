@@ -71,4 +71,7 @@ dependencies {
 
     // Activity KTX
     implementation "androidx.activity:activity-ktx:1.4.0"
+
+    // Lifecycle KTX
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
 }
